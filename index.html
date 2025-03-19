@@ -3,20 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FileVault - Penyimpanan File Online</title>
+    <title>DarkFiles - Penyimpanan File</title>
     <style>
-        :root {
-            --bg-primary: #121212;
-            --bg-secondary: #1e1e1e;
-            --bg-tertiary: #2d2d2d;
-            --text-primary: #ffffff;
-            --text-secondary: #b3b3b3;
-            --accent: #8c52ff;
-            --accent-hover: #7041e6;
-            --error: #ff5252;
-            --success: #4caf50;
-        }
-        
         * {
             margin: 0;
             padding: 0;
@@ -25,693 +13,544 @@
         }
         
         body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
+            background-color: #121212;
+            color: #e0e0e0;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
         
         header {
-            background-color: var(--bg-secondary);
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 30px;
         }
         
         .logo {
-            font-size: 1.8rem;
+            font-size: 24px;
             font-weight: bold;
-            color: var(--accent);
+            color: #bb86fc;
         }
         
-        .nav-links {
+        .auth-section {
             display: flex;
-            gap: 1.5rem;
+            gap: 20px;
         }
         
-        .nav-links button {
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            font-size: 1rem;
-            cursor: pointer;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            transition: background-color 0.3s;
+        .main-content {
+            display: none;
         }
         
-        .nav-links button:hover {
-            background-color: var(--bg-tertiary);
-        }
-        
-        main {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-        }
-        
-        .form-container {
-            background-color: var(--bg-secondary);
+        .login-form, .register-form {
+            background-color: #1e1e1e;
+            padding: 30px;
             border-radius: 8px;
-            padding: 2rem;
-            width: 100%;
             max-width: 400px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin: 50px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
-        .form-title {
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
+        h2 {
+            color: #bb86fc;
+            margin-bottom: 20px;
             text-align: center;
         }
         
         .form-group {
-            margin-bottom: 1.2rem;
+            margin-bottom: 20px;
         }
         
-        .form-group label {
+        label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
+            margin-bottom: 8px;
+            color: #bb86fc;
         }
         
-        .form-control {
+        input[type="text"], input[type="password"] {
             width: 100%;
-            padding: 0.8rem;
+            padding: 12px;
+            background-color: #2d2d2d;
+            border: 1px solid #444;
             border-radius: 4px;
-            border: 1px solid var(--bg-tertiary);
-            background-color: var(--bg-tertiary);
-            color: var(--text-primary);
-            font-size: 1rem;
+            color: #e0e0e0;
+            font-size: 16px;
         }
         
-        .form-control:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 0.8rem;
+        button {
+            background-color: #bb86fc;
+            color: #121212;
             border: none;
+            padding: 12px 20px;
             border-radius: 4px;
-            background-color: var(--accent);
-            color: white;
-            font-size: 1rem;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
             transition: background-color 0.3s;
+            width: 100%;
         }
         
-        .btn:hover {
-            background-color: var(--accent-hover);
+        button:hover {
+            background-color: #a370db;
         }
         
-        .form-footer {
-            margin-top: 1.5rem;
+        .switch-form {
             text-align: center;
-            color: var(--text-secondary);
+            margin-top: 20px;
         }
         
-        .form-footer a {
-            color: var(--accent);
+        .switch-form a {
+            color: #bb86fc;
             text-decoration: none;
+            cursor: pointer;
         }
         
-        .form-footer a:hover {
+        .switch-form a:hover {
             text-decoration: underline;
         }
         
-        .dashboard {
-            display: none;
-            width: 100%;
-            max-width: 900px;
-            background-color: var(--bg-secondary);
+        .file-upload {
+            background-color: #1e1e1e;
+            padding: 30px;
             border-radius: 8px;
-            padding: 2rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
         }
         
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
+        .file-upload-btn {
+            display: inline-block;
+            margin-top: 10px;
         }
         
-        .dashboard-title {
-            font-size: 1.5rem;
-        }
-        
-        .upload-section {
-            background-color: var(--bg-tertiary);
+        .file-list {
+            background-color: #1e1e1e;
+            padding: 30px;
             border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .upload-area {
-            border: 2px dashed var(--text-secondary);
-            border-radius: 6px;
-            padding: 2rem;
-            text-align: center;
-            margin-bottom: 1rem;
-            cursor: pointer;
-            transition: border-color 0.3s;
-        }
-        
-        .upload-area:hover {
-            border-color: var(--accent);
-        }
-        
-        .upload-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var(--text-secondary);
-        }
-        
-        .upload-text {
-            margin-bottom: 1rem;
-            color: var(--text-secondary);
-        }
-        
-        .file-types {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-        
-        .files-section {
-            background-color: var(--bg-tertiary);
-            border-radius: 8px;
-            padding: 1.5rem;
-        }
-        
-        .files-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        
-        .files-title {
-            font-size: 1.2rem;
-        }
-        
-        .files-filter select {
-            background-color: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 1px solid var(--bg-tertiary);
-            padding: 0.5rem;
-            border-radius: 4px;
-        }
-        
-        .files-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            grid-gap: 1rem;
         }
         
         .file-item {
-            background-color: var(--bg-secondary);
-            border-radius: 6px;
-            padding: 1rem;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s, background-color 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #333;
         }
         
-        .file-item:hover {
-            background-color: var(--bg-primary);
-            transform: translateY(-5px);
-        }
-        
-        .file-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--accent);
+        .file-item:last-child {
+            border-bottom: none;
         }
         
         .file-name {
-            font-size: 0.9rem;
-            margin-bottom: 0.3rem;
-            word-break: break-all;
+            flex-grow: 1;
         }
         
-        .file-size {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
+        .file-actions {
+            display: flex;
+            gap: 10px;
         }
         
-        .message {
-            padding: 0.8rem;
-            margin-bottom: 1rem;
+        .file-actions button {
+            width: auto;
+            padding: 8px 12px;
+        }
+        
+        .rename-input {
+            padding: 8px;
+            background-color: #2d2d2d;
+            border: 1px solid #444;
             border-radius: 4px;
+            color: #e0e0e0;
+            width: 100%;
+            margin-right: 10px;
+        }
+        
+        .user-info {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+        
+        .logout-btn {
+            background-color: #cf6679;
+            width: auto;
+            padding: 8px 16px;
+        }
+        
+        .logout-btn:hover {
+            background-color: #b4505e;
+        }
+        
+        .empty-state {
             text-align: center;
+            padding: 50px 0;
+            color: #888;
         }
         
-        .error {
-            background-color: rgba(255, 82, 82, 0.2);
-            color: var(--error);
+        .file-type-icon {
+            margin-right: 10px;
+            font-size: 20px;
         }
         
-        .success {
-            background-color: rgba(76, 175, 80, 0.2);
-            color: var(--success);
-        }
-        
-        footer {
-            text-align: center;
-            padding: 1.5rem;
-            background-color: var(--bg-secondary);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-        
-        /* Responsiveness */
-        @media (max-width: 768px) {
-            .dashboard-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            
-            .files-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-            
-            .files-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            }
-        }
+        .image-icon { color: #4caf50; }
+        .video-icon { color: #2196f3; }
+        .document-icon { color: #ff9800; }
+        .apk-icon { color: #9c27b0; }
+        .other-icon { color: #607d8b; }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">FileVault</div>
-        <div class="nav-links">
-            <button id="loginBtn">Masuk</button>
-            <button id="registerBtn">Daftar</button>
-            <button id="logoutBtn" style="display: none;">Keluar</button>
-        </div>
-    </header>
-    
-    <main>
+    <div class="container">
+        <header>
+            <div class="logo">DarkFiles</div>
+            <div class="auth-section">
+                <div class="user-welcome" style="display: none;">
+                    Selamat datang, <span class="username"></span>
+                    <button class="logout-btn">Keluar</button>
+                </div>
+            </div>
+        </header>
+        
         <!-- Login Form -->
-        <div class="form-container" id="loginForm">
-            <h2 class="form-title">Masuk ke Akun</h2>
-            <div id="loginMessage" class="message" style="display: none;"></div>
-            <form id="loginFormElement">
-                <div class="form-group">
-                    <label for="loginUsername">Username</label>
-                    <input type="text" id="loginUsername" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" class="form-control" required>
-                </div>
-                <button type="submit" class="btn">Masuk</button>
-                <div class="form-footer">
-                    Belum punya akun? <a href="#" id="goToRegister">Daftar sekarang</a>
-                </div>
-            </form>
+        <div class="login-form">
+            <h2>Masuk</h2>
+            <div class="form-group">
+                <label for="login-username">Username</label>
+                <input type="text" id="login-username" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" required>
+            </div>
+            <button id="login-btn">Masuk</button>
+            <div class="switch-form">
+                <p>Belum punya akun? <a id="switch-to-register">Daftar</a></p>
+            </div>
         </div>
         
         <!-- Register Form -->
-        <div class="form-container" id="registerForm" style="display: none;">
-            <h2 class="form-title">Daftar Akun Baru</h2>
-            <div id="registerMessage" class="message" style="display: none;"></div>
-            <form id="registerFormElement">
-                <div class="form-group">
-                    <label for="registerUsername">Username</label>
-                    <input type="text" id="registerUsername" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="registerPassword">Password</label>
-                    <input type="password" id="registerPassword" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="confirmPassword">Konfirmasi Password</label>
-                    <input type="password" id="confirmPassword" class="form-control" required>
-                </div>
-                <button type="submit" class="btn">Daftar</button>
-                <div class="form-footer">
-                    Sudah punya akun? <a href="#" id="goToLogin">Masuk sekarang</a>
-                </div>
-            </form>
+        <div class="register-form" style="display: none;">
+            <h2>Daftar</h2>
+            <div class="form-group">
+                <label for="register-username">Username</label>
+                <input type="text" id="register-username" required>
+            </div>
+            <div class="form-group">
+                <label for="register-password">Password</label>
+                <input type="password" id="register-password" required>
+            </div>
+            <div class="form-group">
+                <label for="register-confirm-password">Konfirmasi Password</label>
+                <input type="password" id="register-confirm-password" required>
+            </div>
+            <button id="register-btn">Daftar</button>
+            <div class="switch-form">
+                <p>Sudah punya akun? <a id="switch-to-login">Masuk</a></p>
+            </div>
         </div>
         
-        <!-- Dashboard -->
-        <div class="dashboard" id="dashboard">
-            <div class="dashboard-header">
-                <h2 class="dashboard-title">Penyimpanan File Saya</h2>
-                <div id="userInfo">Selamat datang, <span id="username"></span>!</div>
+        <!-- Main Content (after login) -->
+        <div class="main-content">
+            <div class="user-info">
+                <span>Selamat datang, <span class="username"></span></span>
+                <button class="logout-btn">Keluar</button>
             </div>
             
-            <div class="upload-section">
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">↑</div>
-                    <h3>Upload File</h3>
-                    <p class="upload-text">Klik atau drag & drop file disini</p>
-                    <p class="file-types">Mendukung foto, video, dokumen, APK, dan berbagai format file lainnya</p>
+            <div class="file-upload">
+                <h2>Unggah File</h2>
+                <div class="form-group">
+                    <label for="file-upload">Pilih file untuk diunggah</label>
+                    <input type="file" id="file-upload" style="display: none;">
+                    <button class="file-upload-btn" onclick="document.getElementById('file-upload').click()">Pilih File</button>
+                    <span id="selected-file" style="margin-left: 10px;"></span>
                 </div>
-                <input type="file" id="fileInput" style="display: none;" multiple>
-                <div id="uploadProgress" style="display: none;">
-                    <div id="progressBar" style="height: 6px; background-color: var(--accent); width: 0%; margin-top: 10px; border-radius: 3px;"></div>
-                    <p id="progressText" style="text-align: center; margin-top: 5px; font-size: 0.9rem; color: var(--text-secondary);"></p>
-                </div>
+                <button id="upload-btn" disabled>Unggah</button>
             </div>
             
-            <div class="files-section">
-                <div class="files-header">
-                    <h3 class="files-title">File Saya</h3>
-                    <div class="files-filter">
-                        <select id="fileFilter">
-                            <option value="all">Semua File</option>
-                            <option value="image">Gambar</option>
-                            <option value="video">Video</option>
-                            <option value="document">Dokumen</option>
-                            <option value="application">APK & Aplikasi</option>
-                            <option value="other">Lainnya</option>
-                        </select>
+            <div class="file-list">
+                <h2>File Saya</h2>
+                <div id="files-container">
+                    <div class="empty-state">
+                        <p>Belum ada file. Unggah file pertama Anda!</p>
                     </div>
                 </div>
-                
-                <div class="files-grid" id="filesGrid">
-                    <!-- Files will be displayed here -->
-                </div>
             </div>
         </div>
-    </main>
-    
-    <footer>
-        &copy; 2025 FileVault - Penyimpanan File Online. Semua hak dilindungi.
-    </footer>
-    
+    </div>
+
     <script>
-        // DOM Elements
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const dashboard = document.getElementById('dashboard');
-        const loginBtn = document.getElementById('loginBtn');
-        const registerBtn = document.getElementById('registerBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const goToRegister = document.getElementById('goToRegister');
-        const goToLogin = document.getElementById('goToLogin');
-        const loginFormElement = document.getElementById('loginFormElement');
-        const registerFormElement = document.getElementById('registerFormElement');
-        const loginMessage = document.getElementById('loginMessage');
-        const registerMessage = document.getElementById('registerMessage');
-        const usernameSpan = document.getElementById('username');
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const uploadProgress = document.getElementById('uploadProgress');
-        const progressBar = document.getElementById('progressBar');
-        const progressText = document.getElementById('progressText');
-        const fileFilter = document.getElementById('fileFilter');
-        const filesGrid = document.getElementById('filesGrid');
-        
-        // Mock database
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-        let files = JSON.parse(localStorage.getItem('files')) || [];
+        // Simulasi penyimpanan
+        let users = JSON.parse(localStorage.getItem('users')) || {};
         let currentUser = null;
+        let files = JSON.parse(localStorage.getItem('files')) || {};
         
-        // Check if user is logged in
-        function checkAuth() {
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                showDashboard();
-            }
-        }
+        // Elements
+        const loginForm = document.querySelector('.login-form');
+        const registerForm = document.querySelector('.register-form');
+        const mainContent = document.querySelector('.main-content');
+        const userWelcome = document.querySelector('.user-welcome');
+        const usernameElements = document.querySelectorAll('.username');
+        const logoutBtns = document.querySelectorAll('.logout-btn');
+        const fileUploadInput = document.getElementById('file-upload');
+        const selectedFileSpan = document.getElementById('selected-file');
+        const uploadBtn = document.getElementById('upload-btn');
+        const filesContainer = document.getElementById('files-container');
         
-        // Show dashboard
-        function showDashboard() {
-            loginForm.style.display = 'none';
-            registerForm.style.display = 'none';
-            dashboard.style.display = 'block';
-            loginBtn.style.display = 'none';
-            registerBtn.style.display = 'none';
-            logoutBtn.style.display = 'block';
-            usernameSpan.textContent = currentUser.username;
-            displayFiles();
-        }
-        
-        // Show login form
-        function showLogin() {
-            loginForm.style.display = 'block';
-            registerForm.style.display = 'none';
-            dashboard.style.display = 'none';
-            loginBtn.style.display = 'block';
-            registerBtn.style.display = 'block';
-            logoutBtn.style.display = 'none';
-        }
-        
-        // Show register form
-        function showRegister() {
+        // Form switching
+        document.getElementById('switch-to-register').addEventListener('click', () => {
             loginForm.style.display = 'none';
             registerForm.style.display = 'block';
-            dashboard.style.display = 'none';
-            loginBtn.style.display = 'block';
-            registerBtn.style.display = 'block';
-            logoutBtn.style.display = 'none';
-        }
-        
-        // Login handler
-        loginFormElement.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            const user = users.find(u => u.username === username && u.password === password);
-            
-            if (user) {
-                currentUser = user;
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                showDashboard();
-                loginFormElement.reset();
-                showMessage(loginMessage, 'Login berhasil!', 'success');
-            } else {
-                showMessage(loginMessage, 'Username atau password salah!', 'error');
-            }
         });
         
-        // Register handler
-        registerFormElement.addEventListener('submit', function(e) {
-            e.preventDefault();
+        document.getElementById('switch-to-login').addEventListener('click', () => {
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
+        
+        // Register
+        document.getElementById('register-btn').addEventListener('click', () => {
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
             
-            const username = document.getElementById('registerUsername').value;
-            const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (!username || !password) {
+                alert('Username dan password tidak boleh kosong');
+                return;
+            }
             
             if (password !== confirmPassword) {
-                showMessage(registerMessage, 'Password tidak cocok!', 'error');
+                alert('Password dan konfirmasi password tidak cocok');
                 return;
             }
             
-            if (users.some(u => u.username === username)) {
-                showMessage(registerMessage, 'Username sudah digunakan!', 'error');
+            if (users[username]) {
+                alert('Username sudah digunakan');
                 return;
             }
             
-            const newUser = {
-                id: Date.now(),
-                username,
-                password
+            users[username] = { password };
+            files[username] = [];
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('files', JSON.stringify(files));
+            
+            alert('Pendaftaran berhasil! Silakan masuk.');
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
+        
+        // Login
+        document.getElementById('login-btn').addEventListener('click', () => {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!users[username] || users[username].password !== password) {
+                alert('Username atau password salah');
+                return;
+            }
+            
+            currentUser = username;
+            loginForm.style.display = 'none';
+            mainContent.style.display = 'block';
+            userWelcome.style.display = 'block';
+            
+            usernameElements.forEach(elem => {
+                elem.textContent = username;
+            });
+            
+            renderFiles();
+        });
+        
+        // Logout
+        logoutBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentUser = null;
+                mainContent.style.display = 'none';
+                userWelcome.style.display = 'none';
+                loginForm.style.display = 'block';
+            });
+        });
+        
+        // File upload selection
+        fileUploadInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                selectedFileSpan.textContent = file.name;
+                uploadBtn.disabled = false;
+            } else {
+                selectedFileSpan.textContent = '';
+                uploadBtn.disabled = true;
+            }
+        });
+        
+        // File upload
+        uploadBtn.addEventListener('click', () => {
+            const file = fileUploadInput.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const fileData = {
+                    id: Date.now().toString(),
+                    name: file.name,
+                    type: getFileType(file.name),
+                    size: file.size,
+                    content: e.target.result,
+                    date: new Date().toISOString()
+                };
+                
+                files[currentUser].push(fileData);
+                localStorage.setItem('files', JSON.stringify(files));
+                
+                // Reset upload form
+                fileUploadInput.value = '';
+                selectedFileSpan.textContent = '';
+                uploadBtn.disabled = true;
+                
+                renderFiles();
+                alert('File berhasil diunggah!');
             };
             
-            users.push(newUser);
-            localStorage.setItem('users', JSON.stringify(users));
-            
-            currentUser = newUser;
-            localStorage.setItem('currentUser', JSON.stringify(newUser));
-            
-            showDashboard();
-            registerFormElement.reset();
-            showMessage(registerMessage, 'Pendaftaran berhasil!', 'success');
+            reader.readAsDataURL(file);
         });
         
-        // Logout handler
-        logoutBtn.addEventListener('click', function() {
-            currentUser = null;
-            localStorage.removeItem('currentUser');
-            showLogin();
-        });
-        
-        // Navigation handlers
-        goToRegister.addEventListener('click', function(e) {
-            e.preventDefault();
-            showRegister();
-        });
-        
-        goToLogin.addEventListener('click', function(e) {
-            e.preventDefault();
-            showLogin();
-        });
-        
-        loginBtn.addEventListener('click', showLogin);
-        registerBtn.addEventListener('click', showRegister);
-        
-        // Show message
-        function showMessage(element, message, type) {
-            element.textContent = message;
-            element.className = `message ${type}`;
-            element.style.display = 'block';
-            
-            setTimeout(() => {
-                element.style.display = 'none';
-            }, 3000);
+        // Helper functions
+        function getFileType(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(ext)) return 'image';
+            if (['mp4', 'webm', 'ogg', 'mov', 'avi', 'wmv', 'flv'].includes(ext)) return 'video';
+            if (['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt'].includes(ext)) return 'document';
+            if (['apk'].includes(ext)) return 'apk';
+            return 'other';
         }
         
-        // Upload file handling
-        uploadArea.addEventListener('click', function() {
-            fileInput.click();
-        });
-        
-        uploadArea.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            uploadArea.style.borderColor = 'var(--accent)';
-        });
-        
-        uploadArea.addEventListener('dragleave', function() {
-            uploadArea.style.borderColor = 'var(--text-secondary)';
-        });
-        
-        uploadArea.addEventListener('drop', function(e) {
-            e.preventDefault();
-            uploadArea.style.borderColor = 'var(--text-secondary)';
-            
-            if (e.dataTransfer.files.length > 0) {
-                handleFiles(e.dataTransfer.files);
-            }
-        });
-        
-        fileInput.addEventListener('change', function() {
-            if (fileInput.files.length > 0) {
-                handleFiles(fileInput.files);
-            }
-        });
-        
-        // Handle file uploads
-        function handleFiles(filesList) {
-            uploadProgress.style.display = 'block';
-            
-            let progress = 0;
-            const totalFiles = filesList.length;
-            
-            Array.from(filesList).forEach((file, index) => {
-                // Simulate file upload with progress
-                const timer = setInterval(() => {
-                    progress += Math.random() * 2;
-                    
-                    if (progress >= 100) {
-                        clearInterval(timer);
-                        
-                        // Save file info (in a real app, you'd upload to a server)
-                        const fileInfo = {
-                            id: Date.now() + index,
-                            name: file.name,
-                            size: formatFileSize(file.size),
-                            type: file.type.split('/')[0],
-                            uploadDate: new Date().toISOString(),
-                            userId: currentUser.id
-                        };
-                        
-                        files.push(fileInfo);
-                        localStorage.setItem('files', JSON.stringify(files));
-                        
-                        if (index === totalFiles - 1) {
-                            progressText.textContent = 'Upload selesai!';
-                            
-                            setTimeout(() => {
-                                uploadProgress.style.display = 'none';
-                                progressBar.style.width = '0%';
-                                fileInput.value = '';
-                                displayFiles();
-                            }, 1000);
-                        }
-                    } else {
-                        const percentage = Math.min(100, progress);
-                        progressBar.style.width = `${percentage}%`;
-                        progressText.textContent = `Mengupload ${index + 1}/${totalFiles} - ${Math.round(percentage)}%`;
-                    }
-                }, 100);
-            });
-        }
-        
-        // Format file size
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            
-            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(1024));
-            
-            return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-        
-        // Get file icon based on type
         function getFileIcon(type) {
-            switch (type) {
-                case 'image':
-                    return '🖼️';
-                case 'video':
-                    return '🎬';
-                case 'audio':
-                    return '🎵';
-                case 'application':
-                    return '📱';
-                case 'text':
-                    return '📄';
-                default:
-                    return '📁';
-            }
+            const icons = {
+                'image': '📷',
+                'video': '🎬',
+                'document': '📄',
+                'apk': '📱',
+                'other': '📁'
+            };
+            return icons[type] || icons.other;
         }
         
-        // Display files
-        function displayFiles() {
-            const filterValue = fileFilter.value;
-            let userFiles = files.filter(file => file.userId === currentUser.id);
-            
-            if (filterValue !== 'all') {
-                userFiles = userFiles.filter(file => file.type === filterValue);
-            }
-            
-            filesGrid.innerHTML = '';
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            else if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + ' MB';
+            else return (bytes / 1073741824).toFixed(1) + ' GB';
+        }
+        
+        // Render files
+        function renderFiles() {
+            const userFiles = files[currentUser] || [];
             
             if (userFiles.length === 0) {
-                filesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem 0; color: var(--text-secondary);">Belum ada file yang diupload</p>';
+                filesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <p>Belum ada file. Unggah file pertama Anda!</p>
+                    </div>
+                `;
                 return;
             }
             
+            let html = '';
             userFiles.forEach(file => {
-                const fileElement = document.createElement('div');
-                fileElement.className = 'file-item';
-                fileElement.innerHTML = `
-                    <div class="file-icon">${getFileIcon(file.type)}</div>
-                    <div class="file-name">${file.name}</div>
-                    <div class="file-size">${file.size}</div>
+                html += `
+                    <div class="file-item" data-id="${file.id}">
+                        <div class="file-name">
+                            <span class="file-type-icon ${file.type}-icon">${getFileIcon(file.type)}</span>
+                            <span class="file-name-text">${file.name}</span>
+                            <small>(${formatFileSize(file.size)})</small>
+                        </div>
+                        <div class="file-actions">
+                            <button class="download-btn">Unduh</button>
+                            <button class="rename-btn">Ganti Nama</button>
+                            <button class="delete-btn">Hapus</button>
+                        </div>
+                    </div>
                 `;
-                
-                fileElement.addEventListener('click', () => {
-                    // In a real app, this would open the file or show a download/preview option
-                    alert(`File dipilih: ${file.name}`);
-                });
-                
-                filesGrid.appendChild(fileElement);
+            });
+            
+            filesContainer.innerHTML = html;
+            
+            // Add event listeners to file actions
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                btn.addEventListener('click', downloadFile);
+            });
+            
+            document.querySelectorAll('.rename-btn').forEach(btn => {
+                btn.addEventListener('click', renameFile);
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', deleteFile);
             });
         }
         
-        // Filter files
-        fileFilter.addEventListener('change', displayFiles);
+        // File actions
+        function downloadFile(e) {
+            const fileId = e.target.closest('.file-item').dataset.id;
+            const file = files[currentUser].find(f => f.id === fileId);
+            
+            if (!file) return;
+            
+            const link = document.createElement('a');
+            link.href = file.content;
+            link.download = file.name;
+            link.click();
+        }
         
-        // Initial check
-        checkAuth();
+        function renameFile(e) {
+            const fileItem = e.target.closest('.file-item');
+            const fileId = fileItem.dataset.id;
+            const file = files[currentUser].find(f => f.id === fileId);
+            const fileNameElement = fileItem.querySelector('.file-name-text');
+            
+            const currentName = fileNameElement.textContent;
+            const newName = prompt('Masukkan nama baru:', currentName);
+            
+            if (newName && newName !== currentName) {
+                file.name = newName;
+                localStorage.setItem('files', JSON.stringify(files));
+                fileNameElement.textContent = newName;
+            }
+        }
+        
+        function deleteFile(e) {
+            const fileItem = e.target.closest('.file-item');
+            const fileId = fileItem.dataset.id;
+            
+            if (confirm('Anda yakin ingin menghapus file ini?')) {
+                files[currentUser] = files[currentUser].filter(f => f.id !== fileId);
+                localStorage.setItem('files', JSON.stringify(files));
+                renderFiles();
+            }
+        }
+        
+        // Check for logged in user
+        const checkLoggedInUser = () => {
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser && users[storedUser]) {
+                currentUser = storedUser;
+                loginForm.style.display = 'none';
+                mainContent.style.display = 'block';
+                userWelcome.style.display = 'block';
+                
+                usernameElements.forEach(elem => {
+                    elem.textContent = currentUser;
+                });
+                
+                renderFiles();
+            }
+        };
+        
+        // Initialize
+        checkLoggedInUser();
     </script>
 </body>
 </html>
