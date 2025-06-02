@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusTranslate | Futuristic Language Translator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --primary: #00f0ff;
+            --secondary: #7b2dff;
+            --dark: #0a0a1a;
+            --light: #f0f8ff;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+        
+        .glow {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
+        }
+        
+        .neon-border {
+            position: relative;
+            border: 2px solid transparent;
+            border-radius: 0.5rem;
+        }
+        
+        .neon-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 0.5rem;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(0, 240, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
+        }
+        
+        .grid-pattern {
+            background-image: 
+                linear-gradient(rgba(123, 45, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(123, 45, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        
+        .typing-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 24px;
+            background: var(--primary);
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .language-selector {
+            background-color: rgba(10, 10, 26, 0.8);
+            border: 1px solid rgba(123, 45, 255, 0.3);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .language-selector:hover {
+            border-color: var(--primary);
+        }
+        
+        .language-selector:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.3);
+        }
+        
+        .text-input, .text-output {
+            min-height: 150px;
+            background-color: rgba(10, 10, 26, 0.6);
+            border: 1px solid rgba(123, 45, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .text-input:focus, .text-output:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.3);
+        }
+        
+        .translate-btn {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        
+        .translate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 240, 255, 0.3);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu {
+            transition: all 0.3s ease;
+            max-height: 0;
+            overflow: hidden;
+        }
+        
+        .mobile-menu.open {
+            max-height: 500px;
+        }
+        
+        .contact-input {
+            background-color: rgba(10, 10, 26, 0.6);
+            border: 1px solid rgba(123, 45, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .contact-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.3);
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(var(--primary), var(--secondary));
+            opacity: 0.3;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="grid-pattern">
+    <!-- Particles Background -->
+    <div id="particles"></div>
+    
+    <!-- Navigation -->
+    <nav class="bg-black bg-opacity-50 backdrop-blur-md fixed w-full z-50 border-b border-purple-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span class="text-2xl font-bold gradient-text orbitron">Nexus<span class="text-white">Translate</span></span>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="#home" class="nav-link text-white px-3 py-2 rounded-md text-sm font-medium hover:text-cyan-300 transition">Home</a>
+                            <a href="#translator" class="nav-link text-white px-3 py-2 rounded-md text-sm font-medium hover:text-cyan-300 transition">Translator</a>
+                            <a href="#about" class="nav-link text-white px-3 py-2 rounded-md text-sm font-medium hover:text-cyan-300 transition">About</a>
+                            <a href="#contact" class="nav-link text-white px-3 py-2 rounded-md text-sm font-medium hover:text-cyan-300 transition">Contact</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center md:ml-6">
+                        <button class="gradient-bg text-white px-4 py-2 rounded-md text-sm font-medium orbitron hover:opacity-90 transition">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login
+                        </button>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-white hover:text-cyan-300 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden bg-black bg-opacity-90">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-gray-800">Home</a>
+                <a href="#translator" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-gray-800">Translator</a>
+                <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-gray-800">About</a>
+                <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-gray-800">Contact</a>
+                <button class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white hover:bg-gray-800">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center pt-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="floating mb-8">
+                <div class="w-24 h-24 gradient-bg rounded-full mx-auto glow flex items-center justify-center">
+                    <i class="fas fa-language text-4xl text-white"></i>
+                </div>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 orbitron">
+                <span class="gradient-text glow-text">Universal</span> 
+                <span class="text-white">Language</span> 
+                <span class="gradient-text glow-text">Translator</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-3xl mx-auto">
+                Break language barriers with our advanced AI-powered translation technology. Experience seamless communication across <span class="gradient-text font-medium">100+ languages</span> in real-time.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#translator" class="gradient-bg text-white px-8 py-4 rounded-lg text-lg font-medium orbitron hover:opacity-90 transition translate-btn">
+                    <i class="fas fa-exchange-alt mr-2"></i>Try Translator
+                </a>
+                <a href="#about" class="bg-transparent border border-cyan-400 text-white px-8 py-4 rounded-lg text-lg font-medium orbitron hover:bg-cyan-900 hover:bg-opacity-30 transition">
+                    <i class="fas fa-info-circle mr-2"></i>Learn More
+                </a>
+            </div>
+            
+            <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                <div class="neon-border p-4 bg-black bg-opacity-40 backdrop-blur-sm rounded-lg">
+                    <i class="fas fa-bolt text-cyan-400 text-2xl mb-2"></i>
+                    <h3 class="text-white font-medium">Instant</h3>
+                    <p class="text-gray-400 text-sm">Real-time translation</p>
+                </div>
+                <div class="neon-border p-4 bg-black bg-opacity-40 backdrop-blur-sm rounded-lg">
+                    <i class="fas fa-globe text-purple-400 text-2xl mb-2"></i>
+                    <h3 class="text-white font-medium">100+ Languages</h3>
+                    <p class="text-gray-400 text-sm">Global coverage</p>
+                </div>
+                <div class="neon-border p-4 bg-black bg-opacity-40 backdrop-blur-sm rounded-lg">
+                    <i class="fas fa-robot text-cyan-300 text-2xl mb-2"></i>
+                    <h3 class="text-white font-medium">AI-Powered</h3>
+                    <p class="text-gray-400 text-sm">Advanced algorithms</p>
+                </div>
+                <div class="neon-border p-4 bg-black bg-opacity-40 backdrop-blur-sm rounded-lg">
+                    <i class="fas fa-lock text-purple-300 text-2xl mb-2"></i>
+                    <h3 class="text-white font-medium">Secure</h3>
+                    <p class="text-gray-400 text-sm">Encrypted data</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-0 right-0 flex justify-center">
+            <a href="#translator" class="text-gray-400 hover:text-white animate-bounce">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+    
+    <!-- Translator Section -->
+    <section id="translator" class="min-h-screen py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold orbitron">
+                    <span class="gradient-text glow-text">Nexus</span>
+                    <span class="text-white">Translator</span>
+                </h2>
+                <p class="text-lg text-gray-300 mt-4 max-w-2xl mx-auto">
+                    Experience the future of language translation with our cutting-edge technology
+                </p>
+            </div>
+            
+            <div class="bg-black bg-opacity-50 backdrop-blur-md rounded-xl p-6 neon-border">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Input Section -->
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-white font-medium orbitron">Input Text</h3>
+                            <div class="flex items-center">
+                                <i class="fas fa-keyboard text-cyan-400 mr-2"></i>
+                                <select id="inputLang" class="language-selector px-3 py-1 rounded-md">
+                                    <option value="auto">Detect Language</option>
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="it">Italian</option>
+                                    <option value="pt">Portuguese</option>
+                                    <option value="ru">Russian</option>
+                                    <option value="zh">Chinese</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="ko">Korean</option>
+                                    <option value="ar">Arabic</option>
+                                    <option value="hi">Hindi</option>
+                                </select>
+                            </div>
+                        </div>
+                        <textarea id="inputText" class="text-input w-full p-4 rounded-lg text-white focus:ring-2 focus:ring-cyan-400" placeholder="Type or paste text here..."></textarea>
+                        <div class="flex justify-between mt-2">
+                            <div class="text-xs text-gray-400">
+                                <span id="charCount">0</span>/5000
+                            </div>
+                            <button id="clearInput" class="text-gray-400 hover:text-white text-sm">
+                                <i class="fas fa-trash-alt mr-1"></i>Clear
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Output Section -->
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-white font-medium orbitron">Translation</h3>
+                            <div class="flex items-center">
+                                <i class="fas fa-globe-americas text-purple-400 mr-2"></i>
+                                <select id="outputLang" class="language-selector px-3 py-1 rounded-md">
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="it">Italian</option>
+                                    <option value="pt">Portuguese</option>
+                                    <option value="ru">Russian</option>
+                                    <option value="zh">Chinese</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="ko">Korean</option>
+                                    <option value="ar">Arabic</option>
+                                    <option value="hi">Hindi</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="outputText" class="text-output w-full p-4 rounded-lg text-white min-h-[150px] bg-opacity-60" contenteditable="false">
+                            <p class="text-gray-400">Translation will appear here...</p>
+                        </div>
+                        <div class="flex justify-between mt-2">
+                            <div class="flex space-x-3">
+                                <button id="copyOutput" class="text-gray-400 hover:text-white text-sm">
+                                    <i class="fas fa-copy mr-1"></i>Copy
+                                </button>
+                                <button id="speakOutput" class="text-gray-400 hover:text-white text-sm">
+                                    <i class="fas fa-volume-up mr-1"></i>Speak
+                                </button>
+                            </div>
+                            <button id="swapLanguages" class="text-gray-400 hover:text-white text-sm">
+                                <i class="fas fa-exchange-alt mr-1"></i>Swap
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 flex justify-center">
+                    <button id="translateBtn" class="gradient-bg text-white px-8 py-3 rounded-lg text-lg font-medium orbitron hover:opacity-90 transition translate-btn pulse">
+                        <i class="fas fa-exchange-alt mr-2"></i>Translate
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Additional Features -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+                <div class="neon-border p-6 bg-black bg-opacity-40 backdrop-blur-sm rounded-lg hover:bg-opacity-60 transition">
+                    <div class="flex items-center mb-4">
+                        <div class="gradient-bg p-3 rounded-full mr-4">
+                            <i class="fas fa-camera text-white"></i>
+                        </div>
+                        <h3 class="text-white font-medium orbitron">Image Translation</h3>
+                    </div>
+                    <p class="text-gray-400">Extract and translate text from images with our OCR technology.</p>
+                </div>
+                <div class="neon-border p-6 bg-black bg-opacity-40 backdrop-blur-sm rounded-lg hover:bg-opacity-60 transition">
+                    <div class="flex items-center mb-4">
+                        <div class="gradient-bg p-3 rounded-full mr-4">
+                            <i class="fas fa-microphone text-white"></i>
+                        </div>
+                        <h3 class="text-white font-medium orbitron">Voice Translation</h3>
+                    </div>
+                    <p class="text-gray-400">Speak and get instant translations with our voice recognition.</p>
+                </div>
+                <div class="neon-border p-6 bg-black bg-opacity-40 backdrop-blur-sm rounded-lg hover:bg-opacity-60 transition">
+                    <div class="flex items-center mb-4">
+                        <div class="gradient-bg p-3 rounded-full mr-4">
+                            <i class="fas fa-file-alt text-white"></i>
+                        </div>
+                        <h3 class="text-white font-medium orbitron">Document Translation</h3>
+                    </div>
+                    <p class="text-gray-400">Upload and translate entire documents while preserving formatting.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="min-h-screen py-20 px-4 sm:px-6 lg:px-8 bg-black bg-opacity-30 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold orbitron">
+                    <span class="text-white">About</span>
+                    <span class="gradient-text glow-text">NexusTranslate</span>
+                </h2>
+                <p class="text-lg text-gray-300 mt-4 max-w-2xl mx-auto">
+                    Revolutionizing communication through advanced language technology
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="neon-border p-8 rounded-xl bg-black bg-opacity-40 mb-8">
+                        <h3 class="text-2xl font-bold mb-4 orbitron gradient-text">Our Technology</h3>
+                        <p class="text-gray-300 mb-6">
+                            NexusTranslate utilizes state-of-the-art neural machine translation (NMT) powered by deep learning algorithms. Our system continuously learns from vast amounts of multilingual data to provide increasingly accurate translations.
+                        </p>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="gradient-bg p-2 rounded-full mr-4 flex-shrink-0">
+                                    <i class="fas fa-brain text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium">Neural Networks</h4>
+                                    <p class="text-gray-400 text-sm">Deep learning models trained on billions of translated sentences</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="gradient-bg p-2 rounded-full mr-4 flex-shrink-0">
+                                    <i class="fas fa-cloud text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium">Cloud Processing</h4>
+                                    <p class="text-gray-400 text-sm">Distributed computing for fast, scalable translations</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="gradient-bg p-2 rounded-full mr-4 flex-shrink-0">
+                                    <i class="fas fa-shield-alt text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium">Security</h4>
+                                    <p class="text-gray-400 text-sm">End-to-end encryption for all your translations</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="relative">
+                        <div class="absolute -top-8 -left-8 w-32 h-32 rounded-full gradient-bg opacity-20 blur-xl"></div>
+                        <div class="absolute -bottom-8 -right-8 w-32 h-32 rounded-full gradient-bg opacity-20 blur-xl"></div>
+                        <div class="neon-border p-8 rounded-xl bg-black bg-opacity-40 relative z-10">
+                            <h3 class="text-2xl font-bold mb-4 orbitron gradient-text">Why Choose Us?</h3>
+                            <div class="space-y-6">
+                                <div class="flex">
+                                    <div class="text-cyan-400 mr-4 mt-1">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-white font-medium">Lightning Fast</h4>
+                                        <p class="text-gray-400">Translations in milliseconds with our optimized algorithms</p>
+                                    </div>
+                                </div>
+                                <div class="flex">
+                                    <div class="text-purple-400 mr-4 mt-1">
+                                        <i class="fas fa-trophy"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-white font-medium">Industry-Leading Accuracy</h4>
+                                        <p class="text-gray-400">95%+ accuracy for major language pairs</p>
+                                    </div>
+                                </div>
+                                <div class="flex">
+                                    <div class="text-cyan-300 mr-4 mt-1">
+                                        <i class="fas fa-language"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-white font-medium">Context-Aware</h4>
+                                        <p class="text-gray-400">Understands idioms, slang, and cultural references</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 neon-border p-6 rounded-xl bg-black bg-opacity-40">
+                        <h3 class="text-xl font-bold mb-4 orbitron gradient-text">Supported Languages</h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 rounded-full gradient-bg mr-2"></span>
+                                <span class="text-gray-300 text-sm">English</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 rounded-full gradient-bg mr-2"></span>
+                                <span class="text-gray-300 text-sm">Spanish</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 rounded-full gradient-bg mr-2"></span>
+                                <span class="text-gray-300 text-sm">French</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 rounded-full gradient-bg mr-2"></span>
+                                <span class="text-gray-300 text-sm">German</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 rounded-full gradient-bg mr-2"></span>
+                                <span class="text-gray-300 text-sm">Chinese</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 rounded-full gradient-bg mr-2"></span>
+                                <span class="text-gray-300 text-sm">Japanese</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 rounded-full gradient-bg mr-2"></span>
+                                <span class="text-gray-300 text-sm">Russian</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 rounded-full gradient-bg mr-2"></span>
+                                <span class="text-gray-300 text-sm">Arabic</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 rounded-full gradient-bg mr-2"></span>
+                                <span class="text-gray-300 text-sm">Portuguese</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 rounded-full gradient-bg mr-2"></span>
+                                <span class="text-gray-300 text-sm">Hindi</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 rounded-full gradient-bg mr-2"></span>
+                                <span class="text-gray-300 text-sm">Italian</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 rounded-full gradient-bg mr-2"></span>
+                                <span class="text-gray-300 text-sm">Korean</span>
+                            </div>
+                        </div>
+                        <p class="text-cyan-400 text-sm mt-4">And 90+ more languages...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="min-h-screen py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold orbitron">
+                    <span class="gradient-text glow-text">Contact</span>
+                    <span class="text-white">Us</span>
+                </h2>
+                <p class="text-lg text-gray-300 mt-4 max-w-2xl mx-auto">
+                    We'd love to hear from you! Send us your feedback or questions.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="neon-border p-8 rounded-xl bg-black bg-opacity-40 backdrop-blur-sm">
+                    <h3 class="text-2xl font-bold mb-6 orbitron gradient-text">Send Us a Message</h3>
+                    <form id="contactForm" class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Your Name</label>
+                            <input type="text" id="name" class="contact-input w-full px-4 py-3 rounded-lg text-white" placeholder="Enter your name">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
+                            <input type="email" id="email" class="contact-input w-full px-4 py-3 rounded-lg text-white" placeholder="Enter your email">
+                        </div>
+                        <div>
+                            <label for="subject" class="block text-sm font-medium text-gray-300 mb-1">Subject</label>
+                            <input type="text" id="subject" class="contact-input w-full px-4 py-3 rounded-lg text-white" placeholder="What's this about?">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-300 mb-1">Message</label>
+                            <textarea id="message" rows="5" class="contact-input w-full px-4 py-3 rounded-lg text-white" placeholder="Your message here..."></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="gradient-bg text-white px-8 py-3 rounded-lg text-lg font-medium orbitron hover:opacity-90 transition translate-btn w-full">
+                                <i class="fas fa-paper-plane mr-2"></i>Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div>
+                    <div class="neon-border p-8 rounded-xl bg-black bg-opacity-40 backdrop-blur-sm mb-8">
+                        <h3 class="text-2xl font-bold mb-6 orbitron gradient-text">Contact Information</h3>
+                        <div class="space-y-6">
+                            <div class="flex">
+                                <div class="gradient-bg p-3 rounded-full mr-4 flex-shrink-0 h-12 w-12 flex items-center justify-center">
+                                    <i class="fas fa-map-marker-alt text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium">Address</h4>
+                                    <p class="text-gray-400">123 Tech Park, Silicon Valley, CA 94000</p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div class="gradient-bg p-3 rounded-full mr-4 flex-shrink-0 h-12 w-12 flex items-center justify-center">
+                                    <i class="fas fa-envelope text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium">Email</h4>
+                                    <p class="text-gray-400">contact@nexustranslate.com</p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div class="gradient-bg p-3 rounded-full mr-4 flex-shrink-0 h-12 w-12 flex items-center justify-center">
+                                    <i class="fas fa-phone-alt text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium">Phone</h4>
+                                    <p class="text-gray-400">+1 (555) 123-4567</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="neon-border p-8 rounded-xl bg-black bg-opacity-40 backdrop-blur-sm">
+                        <h3 class="text-2xl font-bold mb-6 orbitron gradient-text">Follow Us</h3>
+                        <div class="flex space-x-4">
+                            <a href="#" class="gradient-bg p-4 rounded-full h-12 w-12 flex items-center justify-center hover:opacity-90 transition">
+                                <i class="fab fa-twitter text-white"></i>
+                            </a>
+                            <a href="#" class="gradient-bg p-4 rounded-full h-12 w-12 flex items-center justify-center hover:opacity-90 transition">
+                                <i class="fab fa-facebook-f text-white"></i>
+                            </a>
+                            <a href="#" class="gradient-bg p-4 rounded-full h-12 w-12 flex items-center justify-center hover:opacity-90 transition">
+                                <i class="fab fa-instagram text-white"></i>
+                            </a>
+                            <a href="#" class="gradient-bg p-4 rounded-full h-12 w-12 flex items-center justify-center hover:opacity-90 transition">
+                                <i class="fab fa-linkedin-in text-white"></i>
+                            </a>
+                            <a href="#" class="gradient-bg p-4 rounded-full h-12 w-12 flex items-center justify-center hover:opacity-90 transition">
+                                <i class="fab fa-github text-white"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="text-white font-medium mb-3">Subscribe to Newsletter</h4>
+                            <div class="flex">
+                                <input type="email" placeholder="Your email address" class="contact-input w-full px-4 py-3 rounded-l-lg text-white">
+                                <button class="gradient-bg text-white px-4 py-3 rounded-r-lg font-medium orbitron hover:opacity-90 transition">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-black bg-opacity-70 backdrop-blur-md border-t border-purple-900 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <span class="text-2xl font-bold gradient-text orbitron">Nexus<span class="text-white">Translate</span></span>
+                    <p class="text-gray-400 mt-4">
+                        Breaking language barriers with cutting-edge AI technology for a connected world.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-white font-medium orbitron mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-cyan-400 transition">Home</a></li>
+                        <li><a href="#translator" class="text-gray-400 hover:text-cyan-400 transition">Translator</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-cyan-400 transition">About</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-cyan-400 transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-medium orbitron mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">API Documentation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Developer Tools</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Language Packs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-medium orbitron mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Cookie Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">GDPR</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">
+                    &copy; 2023 NexusTranslate. All rights reserved.
+                </p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-cyan-400 transition">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-cyan-400 transition">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-cyan-400 transition">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-cyan-400 transition">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('open');
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if (mobileMenu.classList.contains('open')) {
+                        mobileMenu.classList.remove('open');
+                    }
+                }
+            });
+        });
+        
+        // Character counter for input text
+        const inputText = document.getElementById('inputText');
+        const charCount = document.getElementById('charCount');
+        
+        inputText.addEventListener('input', () => {
+            const count = inputText.value.length;
+            charCount.textContent = count;
+            
+            if (count > 4500) {
+                charCount.classList.add('text-red-400');
+            } else {
+                charCount.classList.remove('text-red-400');
+            }
+        });
+        
+        // Clear input button
+        const clearInput = document.getElementById('clearInput');
+        
+        clearInput.addEventListener('click', () => {
+            inputText.value = '';
+            charCount.textContent = '0';
+            charCount.classList.remove('text-red-400');
+        });
+        
+        // Copy output button
+        const copyOutput = document.getElementById('copyOutput');
+        const outputText = document.getElementById('outputText');
+        
+        copyOutput.addEventListener('click', () => {
+            const textToCopy = outputText.innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Show copied feedback
+                const originalText = copyOutput.innerHTML;
+                copyOutput.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+                setTimeout(() => {
+                    copyOutput.innerHTML = originalText;
+                }, 2000);
+            });
+        });
+        
+        // Speak output button
+        const speakOutput = document.getElementById('speakOutput');
+        
+        speakOutput.addEventListener('click', () => {
+            const textToSpeak = outputText.innerText;
+            const selectedLanguage = document.getElementById('outputLang').value;
+            
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = selectedLanguage;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Text-to-speech is not supported in your browser.');
+            }
+        });
+        
+        // Swap languages button
+        const swapLanguages = document.getElementById('swapLanguages');
+        
+        swapLanguages.addEventListener('click', () => {
+            const inputLang = document.getElementById('inputLang');
+            const outputLang = document.getElementById('outputLang');
+            
+            // Store current values
+            const currentInputLang = inputLang.value;
+            const currentOutputLang = outputLang.value;
+            
+            // Swap values
+            inputLang.value = currentOutputLang === 'auto' ? 'en' : currentOutputLang;
+            outputLang.value = currentInputLang;
+            
+            // Also swap text if there's any
+            if (inputText.value.trim() !== '') {
+                const currentInputText = inputText.value;
+                const currentOutputText = outputText.innerText;
+                
+                inputText.value = currentOutputText;
+                outputText.innerHTML = '<p class="text-gray-400">Translation will appear here...</p>';
+            }
+        });
+        
+        // Translate button functionality (mock translation)
+        const translateBtn = document.getElementById('translateBtn');
+        
+        translateBtn.addEventListener('click', () => {
+            const text = inputText.value.trim();
+            
+            if (text === '') {
+                outputText.innerHTML = '<p class="text-gray-400">Please enter some text to translate</p>';
+                return;
+            }
+            
+            // Show loading state
+            outputText.innerHTML = '<div class="flex justify-center items-center h-full"><div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cyan-400"></div></div>';
+            
+            // Mock translation with delay to simulate API call
+            setTimeout(() => {
+                // This is where you would normally call a real translation API
+                // For demo purposes, we're just reversing the text
+                const mockTranslation = text.split('').reverse().join('');
+                
+                outputText.innerHTML = mockTranslation;
+                
+                // Add pulse animation to output box
+                outputText.classList.add('glow');
+                setTimeout(() => {
+                    outputText.classList.remove('glow');
+                }, 1000);
+            }, 1000);
+        });
+        
+        // Contact form submission
+        const contactForm = document.getElementById('contactForm');
+        
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // Here you would normally send the data to a server
+            // For demo purposes, we'll just show an alert
+            alert(`Thank you for your message, ${name}! We'll get back to you soon.`);
+            
+            // Reset form
+            contactForm.reset();
+        });
+        
+        // Create particles for background
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 30 : 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 2px and 5px
+                const size = Math.random() * 3 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Initialize particles when DOM is loaded
+        document.addEventListener('DOMContentLoaded', createParticles);
+        
+        // Add scroll animation effects
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.scrollY;
+            const translateBtn = document.getElementById('translateBtn');
+            
+            // Pulse translate button on scroll
+            if (scrollPosition > 100) {
+                translateBtn.classList.add('pulse');
+            } else {
+                translateBtn.classList.remove('pulse');
+            }
+        });
+    </script>
+</body>
+</html>
