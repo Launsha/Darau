@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AniShort - Pemendek URL Futuristik</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap');
+        
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --accent: #fd79a8;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0f0f1a;
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #fd79a8, #a29bfe, #6c5ce7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .glow {
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.7);
+        }
+        
+        .card-glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        .input-field {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(253, 121, 168, 0.3);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(108, 92, 231, 0.6);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(108, 92, 231, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(108, 92, 231, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(108, 92, 231, 0);
+            }
+        }
+        
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translate(0,  0px); }
+            50%  { transform: translate(0, 15px); }
+            100%   { transform: translate(0, -0px); }   
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            opacity: 0;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: var(--opacity); }
+        }
+        
+        .anime-character {
+            transition: all 0.3s ease;
+        }
+        
+        .anime-character:hover {
+            transform: scale(1.05);
+        }
+        
+        .result-box {
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .result-box.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 768px) {
+            .anime-character {
+                width: 200px;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Background Stars -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8 md:py-16 flex flex-col items-center">
+        <!-- Header -->
+        <header class="text-center mb-8 md:mb-16">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 gradient-text glow">AniShort</h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
+                Alat pemendek URL futuristik dengan sentuhan anime. Buat tautan panjangmu menjadi pendek dalam sekejap!
+            </p>
+        </header>
+        
+        <div class="w-full max-w-4xl flex flex-col md:flex-row items-center gap-8">
+            <!-- Anime Character -->
+            <div class="anime-character floating w-64 h-64 md:w-80 md:h-80 flex-shrink-0">
+                <lottie-player 
+                    src="https://assets1.lottiefiles.com/packages/lf20_0Lw8DZ.json" 
+                    background="transparent" 
+                    speed="1" 
+                    loop 
+                    autoplay>
+                </lottie-player>
+            </div>
+            
+            <!-- URL Shortener Form -->
+            <div class="card-glass p-6 md:p-8 w-full">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 gradient-text">Pemendek URL</h2>
+                
+                <form id="urlForm" class="space-y-6">
+                    <div>
+                        <label for="originalUrl" class="block text-sm font-medium text-gray-300 mb-2">Masukkan URL Panjang</label>
+                        <input 
+                            type="url" 
+                            id="originalUrl" 
+                            required 
+                            placeholder="https://contoh.com/url-panjang-sangat-panjang" 
+                            class="input-field w-full px-4 py-3 rounded-lg focus:outline-none text-white placeholder-gray-400">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Pilih Layanan</label>
+                        <div class="flex flex-wrap gap-3">
+                            <label class="flex items-center">
+                                <input type="radio" name="service" value="s.id" checked class="hidden peer">
+                                <span class="btn-secondary px-4 py-2 rounded-lg cursor-pointer peer-checked:bg-purple-600 peer-checked:text-white transition">
+                                    s.id
+                                </span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="service" value="bitly" class="hidden peer">
+                                <span class="btn-secondary px-4 py-2 rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white transition">
+                                    Bitly
+                                </span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="service" value="tinyurl" class="hidden peer">
+                                <span class="btn-secondary px-4 py-2 rounded-lg cursor-pointer peer-checked:bg-green-600 peer-checked:text-white transition">
+                                    TinyURL
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="generateBtn" class="btn-primary w-full px-6 py-3 rounded-lg text-white font-semibold flex items-center justify-center pulse">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v4h4a1 1 0 01.82 1.573l-7 10a1 1 0 01-1.54 0l-7-10A1 1 0 014 6h4V2a1 1 0 011.3-.954z" clip-rule="evenodd" />
+                        </svg>
+                        Buat Link Pendek
+                    </button>
+                </form>
+                
+                <!-- Result Container -->
+                <div id="resultContainer" class="mt-6 hidden">
+                    <div class="result-box p-4 rounded-lg bg-gradient-to-r from-purple-900/50 to-blue-900/50 border border-purple-500/30">
+                        <h3 class="text-lg font-semibold text-white mb-2">Link Pendek Kamu:</h3>
+                        <div class="flex items-center">
+                            <input 
+                                type="text" 
+                                id="shortUrl" 
+                                readonly 
+                                class="input-field flex-grow px-4 py-2 rounded-l-lg focus:outline-none text-white bg-gray-800">
+                            <button 
+                                id="copyBtn" 
+                                class="btn-secondary px-4 py-2 rounded-r-lg text-white font-medium flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                                    <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                                </svg>
+                                Salin
+                            </button>
+                        </div>
+                        <div id="copySuccess" class="text-green-400 text-sm mt-2 hidden flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            Berhasil disalin ke clipboard!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Features Section -->
+        <section class="mt-16 w-full max-w-6xl">
+            <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center gradient-text">Fitur Unggulan</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div class="card-glass p-6 rounded-xl hover:border-purple-500/50 transition border border-transparent">
+                    <div class="w-12 h-12 rounded-full bg-purple-600/20 flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Pemendekan Cepat</h3>
+                    <p class="text-gray-300">Mengubah URL panjang menjadi pendek dalam hitungan detik dengan teknologi terdepan.</p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="card-glass p-6 rounded-xl hover:border-blue-500/50 transition border border-transparent">
+                    <div class="w-12 h-12 rounded-full bg-blue-600/20 flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Multi-Layanan</h3>
+                    <p class="text-gray-300">Pilih dari berbagai layanan pemendek URL populer sesuai kebutuhan Anda.</p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="card-glass p-6 rounded-xl hover:border-pink-500/50 transition border border-transparent">
+                    <div class="w-12 h-12 rounded-full bg-pink-600/20 flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Antarmuka Futuristik</h3>
+                    <p class="text-gray-300">Desain modern dengan animasi futuristik dan karakter anime yang menggemaskan.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900/50 py-6 mt-16">
+        <div class="container mx-auto px-4 text-center text-gray-400">
+            <p>© 2023 AniShort - Pemendek URL Futuristik. Dibuat dengan ❤️ untuk penggemar anime.</p>
+            <p class="mt-2 text-sm">Untuk menggunakan Bitly, Anda perlu mengganti API key di kode JavaScript.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Create stars background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starsCount = 100;
+            
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Random position
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                
+                // Random size
+                const size = Math.random() * 3;
+                
+                // Random animation duration and delay
+                const duration = `${5 + Math.random() * 10}s`;
+                const delay = `${Math.random() * 5}s`;
+                const opacity = Math.random();
+                
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.animationDelay = delay;
+                star.style.setProperty('--duration', duration);
+                star.style.setProperty('--opacity', opacity);
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            
+            const urlForm = document.getElementById('urlForm');
+            const resultContainer = document.getElementById('resultContainer');
+            const shortUrlInput = document.getElementById('shortUrl');
+            const copyBtn = document.getElementById('copyBtn');
+            const copySuccess = document.getElementById('copySuccess');
+            const generateBtn = document.getElementById('generateBtn');
+            
+            // Form submission
+            urlForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const originalUrl = document.getElementById('originalUrl').value;
+                const service = document.querySelector('input[name="service"]:checked').value;
+                
+                // Show loading state
+                generateBtn.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Memproses...
+                `;
+                generateBtn.classList.remove('pulse');
+                
+                try {
+                    let shortUrl;
+                    
+                    // Simulate API call (in a real app, you would call actual APIs)
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    if (service === 's.id') {
+                        shortUrl = `https://s.id/${generateRandomString(6)}`;
+                    } else if (service === 'bitly') {
+                        shortUrl = `https://bit.ly/${generateRandomString(7)}`;
+                    } else if (service === 'tinyurl') {
+                        shortUrl = `https://tinyurl.com/${generateRandomString(8)}`;
+                    }
+                    
+                    // Show result
+                    shortUrlInput.value = shortUrl;
+                    resultContainer.classList.remove('hidden');
+                    
+                    // Add show class to animate in
+                    setTimeout(() => {
+                        document.querySelector('.result-box').classList.add('show');
+                    }, 10);
+                    
+                    // Trigger confetti
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                    
+                } catch (error) {
+                    alert('Terjadi kesalahan saat memendekkan URL. Silakan coba lagi.');
+                    console.error(error);
+                } finally {
+                    // Reset button
+                    generateBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v4h4a1 1 0 01.82 1.573l-7 10a1 1 0 01-1.54 0l-7-10A1 1 0 014 6h4V2a1 1 0 011.3-.954z" clip-rule="evenodd" />
+                        </svg>
+                        Buat Link Pendek
+                    `;
+                    generateBtn.classList.add('pulse');
+                }
+            });
+            
+            // Copy to clipboard
+            copyBtn.addEventListener('click', () => {
+                shortUrlInput.select();
+                document.execCommand('copy');
+                
+                // Show success message
+                copySuccess.classList.remove('hidden');
+                
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    copySuccess.classList.add('hidden');
+                }, 3000);
+            });
+            
+            // Generate random string for demo purposes
+            function generateRandomString(length) {
+                const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let result = '';
+                for (let i = 0; i < length; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return result;
+            }
+            
+            // Add hover effect to anime character
+            const animeChar = document.querySelector('.anime-character');
+            animeChar.addEventListener('mouseenter', () => {
+                animeChar.style.filter = 'drop-shadow(0 0 10px rgba(253, 121, 168, 0.7))';
+            });
+            animeChar.addEventListener('mouseleave', () => {
+                animeChar.style.filter = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
