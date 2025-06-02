@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime URL Shortener</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.9.1/build/player.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;900&display=swap');
+        
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --accent: #fd79a8;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+        }
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background-color: #0f0c29;
+            background-image: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .glow {
+            text-shadow: 0 0 10px rgba(172, 255, 252, 0.8);
+        }
+        
+        .neon-border {
+            border: 2px solid transparent;
+            border-image: linear-gradient(45deg, #6c5ce7, #fd79a8) 1;
+            animation: border-pulse 2s infinite alternate;
+        }
+        
+        @keyframes border-pulse {
+            0% {
+                box-shadow: 0 0 10px rgba(108, 92, 231, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 20px rgba(253, 121, 168, 0.8);
+            }
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+        }
+        
+        .character-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+        }
+        
+        #character-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+        
+        .result-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .result-box:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .character-container {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .text-4xl {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="max-w-4xl w-full mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 glow">Anime URL Shortener</h1>
+            <p class="text-lg md:text-xl text-gray-300">Pendekkan URL favoritmu dengan sentuhan anime!</p>
+        </div>
+        
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8 mb-12">
+            <div class="w-full md:w-1/2">
+                <div class="bg-white bg-opacity-10 rounded-xl p-6 neon-border">
+                    <div class="mb-6">
+                        <label for="url-input" class="block text-lg font-medium mb-2">Masukkan URL Panjang</label>
+                        <input 
+                            type="url" 
+                            id="url-input" 
+                            placeholder="https://contoh.com/url-panjang-sangat-panjang" 
+                            class="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-lg font-medium mb-2">Pilih Layanan</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                                <input type="radio" name="service" id="service-s-id" value="s.id" class="hidden peer" checked>
+                                <label for="service-s-id" class="flex items-center justify-center px-4 py-2 border border-gray-700 rounded-lg cursor-pointer peer-checked:border-purple-500 peer-checked:bg-purple-900 peer-checked:bg-opacity-30 hover:bg-gray-800 transition">
+                                    <span class="text-white">s.id</span>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" name="service" id="service-bitly" value="bitly" class="hidden peer">
+                                <label for="service-bitly" class="flex items-center justify-center px-4 py-2 border border-gray-700 rounded-lg cursor-pointer peer-checked:border-blue-500 peer-checked:bg-blue-900 peer-checked:bg-opacity-30 hover:bg-gray-800 transition">
+                                    <span class="text-white">Bitly</span>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" name="service" id="service-tinyurl" value="tinyurl" class="hidden peer">
+                                <label for="service-tinyurl" class="flex items-center justify-center px-4 py-2 border border-gray-700 rounded-lg cursor-pointer peer-checked:border-green-500 peer-checked:bg-green-900 peer-checked:bg-opacity-30 hover:bg-gray-800 transition">
+                                    <span class="text-white">TinyURL</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <button 
+                            id="shorten-btn" 
+                            class="w-full btn-primary text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd" />
+                            </svg>
+                            Pendekkan URL
+                        </button>
+                    </div>
+                    
+                    <div id="bitly-key-container" class="hidden mb-4">
+                        <label for="bitly-key" class="block text-sm font-medium mb-1">Bitly API Key (opsional)</label>
+                        <input 
+                            type="text" 
+                            id="bitly-key" 
+                            placeholder="Masukkan API Key Bitly jika ada" 
+                            class="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white text-sm"
+                        >
+                        <p class="text-xs text-gray-400 mt-1">Jika tidak diisi, akan menggunakan API publik</p>
+                    </div>
+                </div>
+                
+                <div id="result-container" class="hidden mt-6 result-box p-6 neon-border">
+                    <h3 class="text-xl font-bold mb-4">URL Pendek Anda</h3>
+                    <div class="flex items-center">
+                        <input 
+                            type="text" 
+                            id="short-url" 
+                            class="flex-1 px-4 py-2 rounded-l-lg bg-gray-800 border border-gray-700 focus:outline-none text-white" 
+                            readonly
+                        >
+                        <button 
+                            id="copy-btn" 
+                            class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-r-lg border border-purple-700 transition"
+                        >
+                            Salin
+                        </button>
+                    </div>
+                    <div class="mt-3 flex items-center">
+                        <span id="char-count" class="text-sm text-gray-300"></span>
+                        <a id="visit-link" href="#" target="_blank" class="ml-auto text-sm text-purple-300 hover:text-purple-200 transition">Kunjungi URL</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="w-full md:w-1/2">
+                <div class="character-container floating">
+                    <div id="character-animation"></div>
+                </div>
+                <div class="text-center mt-4 pulse">
+                    <p class="text-gray-300">Hai! Aku akan membantumu memendekkan URL!</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-gray-900 bg-opacity-50 rounded-xl p-6 mt-8">
+            <h2 class="text-2xl font-bold mb-4">📝 Dokumentasi</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold mb-2 text-purple-300">Mengganti Karakter Anime</h3>
+                    <p class="text-gray-300 mb-2">Untuk mengganti karakter anime:</p>
+                    <ol class="list-decimal list-inside text-gray-300 space-y-1 text-sm">
+                        <li>Ganti URL JSON animasi Lottie di file JavaScript</li>
+                        <li>Cari file JSON animasi di <a href="https://lottiefiles.com/" class="text-purple-300 hover:underline" target="_blank">LottieFiles</a></li>
+                        <li>Ganti parameter di <code>lottie.loadAnimation()</code></li>
+                    </ol>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-2 text-blue-300">Menggunakan Bitly API Key</h3>
+                    <p class="text-gray-300 mb-2">Untuk menggunakan Bitly API Key pribadi:</p>
+                    <ol class="list-decimal list-inside text-gray-300 space-y-1 text-sm">
+                        <li>Daftar di <a href="https://bitly.com/" class="text-blue-300 hover:underline" target="_blank">Bitly</a></li>
+                        <li>Dapatkan API Key dari dashboard Bitly</li>
+                        <li>Masukkan API Key saat memilih layanan Bitly</li>
+                        <li>Atau set default di file JavaScript</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="mt-12 text-center text-gray-400 text-sm">
+        <p>© 2023 Anime URL Shortener | Dibuat dengan ❤️ untuk penggemar anime</p>
+    </footer>
+
+    <script>
+        // Initialize Lottie animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const animation = lottie.loadAnimation({
+                container: document.getElementById('character-animation'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: 'https://assets5.lottiefiles.com/packages/lf20_0skurerf.json' // Anime girl waving
+            });
+            
+            // Show Bitly API field when Bitly is selected
+            const serviceRadios = document.querySelectorAll('input[name="service"]');
+            const bitlyKeyContainer = document.getElementById('bitly-key-container');
+            
+            serviceRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'bitly') {
+                        bitlyKeyContainer.classList.remove('hidden');
+                    } else {
+                        bitlyKeyContainer.classList.add('hidden');
+                    }
+                    
+                    // Change character animation based on service
+                    changeCharacterAnimation(this.value);
+                });
+            });
+            
+            // URL Shortener functionality
+            const shortenBtn = document.getElementById('shorten-btn');
+            const urlInput = document.getElementById('url-input');
+            const resultContainer = document.getElementById('result-container');
+            const shortUrlInput = document.getElementById('short-url');
+            const copyBtn = document.getElementById('copy-btn');
+            const charCount = document.getElementById('char-count');
+            const visitLink = document.getElementById('visit-link');
+            
+            shortenBtn.addEventListener('click', async function() {
+                const longUrl = urlInput.value.trim();
+                const service = document.querySelector('input[name="service"]:checked').value;
+                const bitlyKey = document.getElementById('bitly-key')?.value.trim();
+                
+                if (!longUrl) {
+                    showError('Silakan masukkan URL yang ingin dipendekkan');
+                    return;
+                }
+                
+                try {
+                    // Validate URL
+                    new URL(longUrl);
+                } catch (e) {
+                    showError('URL tidak valid. Pastikan URL dimulai dengan http:// atau https://');
+                    return;
+                }
+                
+                // Show loading state
+                shortenBtn.disabled = true;
+                shortenBtn.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Memproses...
+                `;
+                
+                try {
+                    let shortUrl;
+                    
+                    switch (service) {
+                        case 's.id':
+                            shortUrl = await shortenWithSId(longUrl);
+                            break;
+                        case 'bitly':
+                            shortUrl = await shortenWithBitly(longUrl, bitlyKey);
+                            break;
+                        case 'tinyurl':
+                            shortUrl = await shortenWithTinyUrl(longUrl);
+                            break;
+                        default:
+                            throw new Error('Layanan tidak valid');
+                    }
+                    
+                    // Show result
+                    shortUrlInput.value = shortUrl;
+                    visitLink.href = shortUrl;
+                    charCount.textContent = `${shortUrl.length} karakter (${Math.round((1 - shortUrl.length/longUrl.length)*100)}% lebih pendek)`;
+                    resultContainer.classList.remove('hidden');
+                    
+                    // Scroll to result
+                    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    
+                    // Change character to success animation
+                    changeCharacterAnimation('success');
+                    
+                } catch (error) {
+                    console.error('Error shortening URL:', error);
+                    showError(`Gagal memendekkan URL: ${error.message}`);
+                    
+                    // Change character to error animation
+                    changeCharacterAnimation('error');
+                } finally {
+                    // Reset button
+                    shortenBtn.disabled = false;
+                    shortenBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd" />
+                        </svg>
+                        Pendekkan URL
+                    `;
+                }
+            });
+            
+            // Copy to clipboard
+            copyBtn.addEventListener('click', function() {
+                shortUrlInput.select();
+                document.execCommand('copy');
+                
+                // Change button text temporarily
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Tersalin!';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+                
+                // Change character to copy animation
+                changeCharacterAnimation('copy');
+            });
+            
+            // Change character animation based on state
+            function changeCharacterAnimation(state) {
+                let animationUrl;
+                
+                switch (state) {
+                    case 's.id':
+                        animationUrl = 'https://assets5.lottiefiles.com/packages/lf20_0skurerf.json'; // Girl waving
+                        break;
+                    case 'bitly':
+                        animationUrl = 'https://assets5.lottiefiles.com/packages/lf20_5tkzkflw.json'; // Girl with laptop
+                        break;
+                    case 'tinyurl':
+                        animationUrl = 'https://assets5.lottiefiles.com/packages/lf20_gnv0wsll.json'; // Girl thinking
+                        break;
+                    case 'success':
+                        animationUrl = 'https://assets5.lottiefiles.com/packages/lf20_1a8i7s1i.json'; // Girl celebrating
+                        break;
+                    case 'error':
+                        animationUrl = 'https://assets5.lottiefiles.com/packages/lf20_ry4sxkzy.json'; // Girl sad
+                        break;
+                    case 'copy':
+                        animationUrl = 'https://assets5.lottiefiles.com/packages/lf20_5tkzkflw.json'; // Girl typing
+                        break;
+                    default:
+                        animationUrl = 'https://assets5.lottiefiles.com/packages/lf20_0skurerf.json'; // Default waving
+                }
+                
+                // Destroy current animation and load new one
+                const container = document.getElementById('character-animation');
+                container.innerHTML = '';
+                lottie.loadAnimation({
+                    container: container,
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: animationUrl
+                });
+            }
+            
+            // Show error message
+            function showError(message) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'bg-red-900 text-white px-4 py-3 rounded-lg mb-4';
+                errorDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                        <span>${message}</span>
+                    </div>
+                `;
+                
+                const form = document.querySelector('.bg-opacity-10');
+                if (form.querySelector('.bg-red-900')) {
+                    form.replaceChild(errorDiv, form.querySelector('.bg-red-900'));
+                } else {
+                    form.prepend(errorDiv);
+                }
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    errorDiv.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+                    setTimeout(() => errorDiv.remove(), 500);
+                }, 5000);
+            }
+            
+            // URL Shortening Services
+            async function shortenWithSId(longUrl) {
+                // Using s.id public API
+                const response = await fetch(`https://s.id/api/public/link/shorten?url=${encodeURIComponent(longUrl)}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.short) {
+                    return `https://s.id/${data.short}`;
+                } else {
+                    throw new Error(data.message || 'Gagal memendekkan URL dengan s.id');
+                }
+            }
+            
+            async function shortenWithBitly(longUrl, apiKey = null) {
+                // Using Bitly API
+                let endpoint = 'https://api-ssl.bitly.com/v4/shorten';
+                let headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey || '6c40a7e7b9a3b9a1a3e9f3e3e3e3e3e3e3e3e3e'}` // Default public token (may not work)
+                };
+                
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({
+                        long_url: longUrl,
+                        domain: 'bit.ly'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.link) {
+                    return data.link;
+                } else {
+                    throw new Error(data.message || 'Gagal memendekkan URL dengan Bitly. Coba gunakan API Key pribadi.');
+                }
+            }
+            
+            async function shortenWithTinyUrl(longUrl) {
+                // Using TinyURL public API
+                const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
+                
+                if (response.ok) {
+                    const shortUrl = await response.text();
+                    if (shortUrl.startsWith('http')) {
+                        return shortUrl;
+                    } else {
+                        throw new Error('Respon tidak valid dari TinyURL');
+                    }
+                } else {
+                    throw new Error('Gagal memendekkan URL dengan TinyURL');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
